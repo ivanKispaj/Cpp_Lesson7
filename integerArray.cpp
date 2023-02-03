@@ -10,13 +10,15 @@
 
 integerArray::integerArray(int size) : _size(size)
 {
-    if (size > 0)
+    if (size <= 0)
     {
-        _array = new int[size];
-        _isEmpty = false;
+        throw BadAnswer(INCORRECT_ARRAY_LEINGHT);
     }
+    _array = new int[_size];
+    _isEmpty = false;
 }
 
+// copy constructor
 integerArray::integerArray(const integerArray &array)
 {
     erase();
@@ -35,6 +37,7 @@ integerArray::~integerArray()
     delete[] _array;
 }
 
+// erase array ( private method )
 void integerArray::erase()
 {
     delete[] _array;
@@ -46,6 +49,12 @@ void integerArray::erase()
 int integerArray::count() const
 {
     return _size;
+}
+
+// is empty array
+bool integerArray::isEmpty() const
+{
+    return _isEmpty;
 }
 
 // append an element to end of the array
@@ -106,35 +115,6 @@ void integerArray::insertAt(int index, int value)
     erase();
     _isEmpty = false;
     _array = newArray;
-}
-
-int integerArray::removeAt(const int index)
-{
-    if (_isEmpty)
-    {
-        throw BadAnswer(ARRAY_IS_EMPTY);
-    }
-    if (index > _size || index < 0)
-    {
-        throw BadAnswer(INDEX_OUT_OF_RANGE);
-    }
-
-    int result = _array[index];
-    int *newArray = new int[_size - 1];
-    for (int i = 0; i < index; i++)
-    {
-        newArray[i] = _array[i];
-    }
-    for (int i = index + 1; i < _size; i++)
-    {
-        newArray[i - 1] = _array[i];
-    }
-
-    erase();
-    _isEmpty = false;
-    _size--;
-    _array = newArray;
-    return result;
 }
 
 // return first element from array
@@ -204,6 +184,36 @@ int integerArray::removeLast()
     return last;
 }
 
+// remove value by index
+int integerArray::removeAt(const int index)
+{
+    if (_isEmpty)
+    {
+        throw BadAnswer(ARRAY_IS_EMPTY);
+    }
+    if (index > _size || index < 0)
+    {
+        throw BadAnswer(INDEX_OUT_OF_RANGE);
+    }
+
+    int result = _array[index];
+    int *newArray = new int[_size - 1];
+    for (int i = 0; i < index; i++)
+    {
+        newArray[i] = _array[i];
+    }
+    for (int i = index + 1; i < _size; i++)
+    {
+        newArray[i - 1] = _array[i];
+    }
+
+    erase();
+    _isEmpty = false;
+    _size--;
+    _array = newArray;
+    return result;
+}
+
 // Array search by value
 int integerArray::getFirstIndexWhere(int value) const
 {
@@ -221,9 +231,10 @@ int integerArray::getFirstIndexWhere(int value) const
     throw BadAnswer(NO_FIND_VALUE);
 }
 
-bool integerArray::isEmpty() const
+// insert value at thebeginning
+void integerArray::inserFirst(int value)
 {
-    return _isEmpty;
+    insertAt(0, value);
 }
 
 int &integerArray::operator[](const int index)
@@ -259,6 +270,36 @@ void integerArray::operator+(integerArray &array)
     _isEmpty = false;
     _size += array._size;
     _array = newArray;
+}
+
+integerArray &integerArray::operator=(const integerArray &array)
+{
+    if (this == &array)
+    {
+        return *this;
+    }
+    if (_array != nullptr)
+    {
+        erase();
+    }
+    _array = new int[array._size];
+    for (int i = 0; i < array._size; i++)
+    {
+        _array[i] = array._array[i];
+    }
+
+    _size = array._size;
+    _isEmpty = array._isEmpty;
+    return *this;
+}
+
+bool integerArray::operator==(const integerArray &array)
+{
+    if (_array == array._array && _isEmpty == array._isEmpty && _size == array._size)
+    {
+        return true;
+    }
+    return false;
 }
 
 void integerArray::printArray() const

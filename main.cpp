@@ -9,9 +9,40 @@
 
 int main(int argc, const char *argv[])
 {
-    integerArray arrayOne;            // создан контейнер
-    integerArray arrayTwo = arrayOne; // скопирован контейнер
+    // Объявление массивов
+    integerArray arrayOne;
+    integerArray arrayTwo;
 
+    // попытка создать массив с отрицательным индексом
+    try
+    {
+        arrayOne = integerArray(-5);
+    }
+    catch (const BadAnswer &error)
+    {
+        std::cout << error.showError();
+    }
+
+    // Создание массива размером в 3 эллемента
+    try
+    {
+        arrayOne = integerArray(3);
+    }
+    catch (const BadAnswer &error)
+    {
+        std::cout << error.showError();
+    }
+
+    // Добавление элементов в конец массива с увеличением его размера
+    arrayOne.append(155);
+    arrayOne.append(351);
+    arrayOne.append(51);
+    arrayOne.append(35);
+
+    arrayTwo = arrayOne; // скопирован контейнер
+
+    // вставка элемента в начало массива
+    arrayOne.inserFirst(3212);
     // во второй массив добавили значение увеличив при этом его размер
     arrayTwo.append(5);
     arrayTwo.append(999);
@@ -23,7 +54,7 @@ int main(int argc, const char *argv[])
 
         // Доступ к неинициализированному пустому массиву индекса не существует!
         std::cout << "Доступ по несуществующему индексу ( пустой массив ): ";
-        std::cout << arrayOne[0] << std::endl;
+        std::cout << arrayOne[10] << std::endl;
     }
     catch (const BadAnswer &error)
     {
@@ -31,11 +62,10 @@ int main(int argc, const char *argv[])
     }
 
     // добавление элементов в массив с изменением его длинны на количество добавленных элементов.
-    arrayOne.append(155);
-    arrayOne.append(351);
-    arrayOne.append(51);
-    arrayOne.append(35);
-
+    std::cout << "Конкатенация массивов: one +  \n";
+    arrayOne.printArray(); // печать всего измененного массива
+    std::cout << "Конкатенация массивов:  two \n";
+    arrayTwo.printArray(); // печать всего измененного массива
     // конкатенация массивов;
     arrayOne + arrayTwo;
 
@@ -48,7 +78,7 @@ int main(int argc, const char *argv[])
 
         std::cout << "Попытка вставки элемента в массив по несуцществующему индексу: ";
         // вставляем значение в массив по несуществующему индексу
-        arrayOne.insertAt(10, 1001);
+        arrayOne.insertAt(100, 1001);
     }
     catch (const BadAnswer &error)
     {
@@ -116,6 +146,23 @@ int main(int argc, const char *argv[])
     try
     {
         std::cout << "Тест выхода за пределы при удалении \n";
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
+        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
         std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
         std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
         std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
