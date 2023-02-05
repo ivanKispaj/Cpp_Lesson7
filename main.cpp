@@ -12,32 +12,29 @@ int main(int argc, const char *argv[])
     // Объявление массивов
     integerArray arrayOne;
     integerArray arrayTwo(-5); // Объявление с ошибкой!
- 
+
     // Добавление в массив значений с одновременным увеличением его размера.
-    arrayOne.append(12);
-    arrayOne.append(43);
+    arrayOne.append(15);
+    arrayOne.append(3);
+    arrayOne.append(-1);
+    arrayOne.append(2);
+    arrayOne.append(0);
+    arrayOne.append(6);
+    arrayOne.append(42);
+    arrayOne.append(2);
+    arrayOne.append(-6);
+    arrayOne.sort();
+    arrayOne.printArray();
 
     arrayTwo.append(11);
     arrayTwo.append(43);
 
-    if (arrayOne == arrayTwo) {
-        std::cout << "Массивы одинаковые!\n";
-    }else{
-        std::cout << "Массивы разные!\n";
-    }
-    arrayOne.printArray();
-    if (auto value = arrayOne[0])
-    {
-        std::cout << "array index: 0 -> value: " << *value << std::endl;
-    }
-    if (auto value = arrayOne[5])
-    {
-        std::cout << "array index: 5 -> value: " << *value << std::endl;
-    }
     arrayOne.inserFirst(999);
-    arrayOne.insertAt(10, 122);
+    // arrayOne.insertAt(10, 122); для несуществующих индексов требуется создавать проверки!
     arrayOne.insertAt(3, 545);
-    arrayOne[5];
+
+    arrayOne + arrayTwo;
+    // arrayOne[10] = 111999; для несуществующих индексов требуется создавать проверки!
     arrayOne.printArray();
     if (auto data = arrayOne.getFirstIndexWhere(43))
     {

@@ -123,14 +123,14 @@ void integerArray::insertAt(int index, int value)
 {
     try
     {
-         if (index < 0 || index > _size)
+        if (index < 0 || index > _size)
         {
             throw BadAnswer(INDEX_OUT_OF_RANGE);
-        } else if (_isEmpty && index != 0)
+        }
+        else if (_isEmpty && index != 0)
         {
             throw BadAnswer(ARRAY_IS_EMPTY);
         }
-       
 
         _size++;
         int *newArray = new int[_size];
@@ -165,20 +165,20 @@ void integerArray::insertAt(int index, int value)
     This method returns a pointer to the first element of the array.
     - Error message: "Array is empty!" if array is empty.
 */
-const int *integerArray::first() const
+std::optional<int> integerArray::first() const
 {
     try
     {
         if (_size > 0)
         {
-            return &_array[0];
+            return _array[0];
         }
         throw BadAnswer(ARRAY_IS_EMPTY);
     }
     catch (const BadAnswer &error)
     {
         std::cerr << error.showError();
-        return nullptr;
+        return std::nullopt;
     }
 }
 
@@ -187,20 +187,20 @@ const int *integerArray::first() const
     This method returns a pointer to the last value of the array.
     - Error message: "Array is empty!" if array is empty.
 */
-const int *integerArray::last() const
+std::optional<int> integerArray::last() const
 {
     try
     {
         if (_size > 0)
         {
-            return &_array[_size - 1];
+            return _array[_size - 1];
         }
         throw BadAnswer(ARRAY_IS_EMPTY);
     }
     catch (const BadAnswer &error)
     {
         std::cerr << error.showError();
-        return nullptr;
+        return std::nullopt;
     }
 }
 
@@ -210,7 +210,7 @@ const int *integerArray::last() const
     reduces the size of the array, and returns a pointer to the deleted value.
     - Error message: "Array is empty!" if array is empty.
 */
-const int *integerArray::removeFirst()
+std::optional<int> integerArray::removeFirst()
 {
 
     try
@@ -240,12 +240,12 @@ const int *integerArray::removeFirst()
             _array = newArray;
         }
 
-        return &_returnValue;
+        return _returnValue;
     }
     catch (const BadAnswer &error)
     {
         std::cerr << error.showError();
-        return nullptr;
+        return std::nullopt;
     }
 }
 
@@ -255,7 +255,7 @@ const int *integerArray::removeFirst()
     reduces the size of the array, and returns a pointer to the deleted value.
     - Error message: "Array is empty!" if array is empty.
 */
-const int *integerArray::removeLast()
+std::optional<int> integerArray::removeLast()
 {
     try
     {
@@ -271,12 +271,12 @@ const int *integerArray::removeLast()
             erase();
         }
 
-        return &_returnValue;
+        return _returnValue;
     }
     catch (const BadAnswer &error)
     {
         std::cerr << error.showError();
-        return nullptr;
+        return std::nullopt;
     }
 }
 
@@ -291,7 +291,7 @@ const int *integerArray::removeLast()
     - Error message: "Array is empty!" if array is empty.
     - Error message: "Index out of range!" if array dont contain an index
 */
-const int *integerArray::removeAt(const int index)
+std::optional<int> integerArray::removeAt(const int index)
 {
     try
     {
@@ -320,12 +320,12 @@ const int *integerArray::removeAt(const int index)
         _isEmpty = false;
         _size--;
         _array = newArray;
-        return &_returnValue;
+        return _returnValue;
     }
     catch (const BadAnswer &error)
     {
         std::cerr << error.showError();
-        return nullptr;
+        return std::nullopt;
     }
 }
 
@@ -337,7 +337,7 @@ const int *integerArray::removeAt(const int index)
     - Returns a pointer to the first index of the value or nullptr if the value is not found.
     - throw Error if array is empty and return nullptr
 */
-const int *integerArray::getFirstIndexWhere(int value)
+std::optional<int> integerArray::getFirstIndexWhere(int value)
 {
     try
     {
@@ -349,16 +349,15 @@ const int *integerArray::getFirstIndexWhere(int value)
         {
             if (_array[i] == value)
             {
-                _returnValue = i;
-                return &_returnValue;
+                return i;
             }
         }
-        return nullptr;
+        return std::nullopt;
     }
     catch (const BadAnswer &error)
     {
         std::cerr << error.showError();
-        return nullptr;
+        return std::nullopt;
     }
 }
 
@@ -376,34 +375,34 @@ void integerArray::inserFirst(int value)
     Returns a pointer to the array value by index,
     nullptr if array is empry or index out if range..
 */
-const int *integerArray::operator[](const int index)
+int &integerArray::operator[](const int index)
 {
-    try
+    // try
+    // {
+    if (index >= 0 && index < _size)
     {
-        if (index >= 0 && index < _size)
-        {
-            _returnValue = _array[index];
-            return &_returnValue;
-        }
-        if (_isEmpty)
-        {
-            throw BadAnswer(ARRAY_IS_EMPTY);
-        }
-        throw BadAnswer(INDEX_OUT_OF_RANGE);
+        return _array[index];
     }
-    catch (const BadAnswer &error)
+    if (_isEmpty)
     {
-        std::cerr << error.showError();
-        return nullptr;
+        throw BadAnswer(ARRAY_IS_EMPTY).showError();
     }
+    throw std::overflow_error("Index out of range!!!");
+    // throw  BadAnswer(INDEX_OUT_OF_RANGE).showError();
+    // }
+    // catch (const BadAnswer &error)
+    // {
+    //     std::cerr << error.showError();
+    //     return nullptr;
+    // }
 }
 
 // array concatenation
-void integerArray::operator+(integerArray &array)
+integerArray integerArray::operator+(integerArray &array)
 {
     if (_isEmpty && array._isEmpty)
     {
-        return;
+        return *this;
     }
     _isEmpty = false;
     int *newArray = new int[_size + array._size];
@@ -419,8 +418,32 @@ void integerArray::operator+(integerArray &array)
     _isEmpty = false;
     _size += array._size;
     _array = newArray;
+    return *this;
 }
 
+// array concatenation
+integerArray integerArray::operator+(integerArray &&array)
+{
+    if (_isEmpty && array._isEmpty)
+    {
+        return *this;
+    }
+    _isEmpty = false;
+    int *newArray = new int[_size + array._size];
+    for (int i = 0; i < _size; i++)
+    {
+        newArray[i] = _array[i];
+    }
+    for (int i = 0; i < array._size; i++)
+    {
+        newArray[i + (_size)] = array._array[i];
+    }
+    erase();
+    _isEmpty = false;
+    _size += array._size;
+    _array = newArray;
+    return *this;
+}
 
 integerArray &integerArray::operator=(const integerArray &array)
 {
@@ -446,11 +469,11 @@ integerArray &integerArray::operator=(const integerArray &array)
 // Comparing two arrays
 bool integerArray::operator==(const integerArray &array)
 {
-    if (_isEmpty == array._isEmpty) 
+    if (_isEmpty == array._isEmpty)
     {
         if (_size == array._size)
         {
-            for(int i = 0; i < _size; i++)
+            for (int i = 0; i < _size; i++)
             {
                 if (_array[i] != array._array[i])
                 {
@@ -469,4 +492,96 @@ void integerArray::printArray() const
     {
         std::cout << "index: " << i << " значение: " << _array[i] << std::endl;
     }
+}
+
+// Method for filtering an array
+/*
+    Method for filtering an array.
+    operators: type char :  '<' '>' '='
+    Returns a container with elements filtered by one of 3 rules:
+    - '>' Returns a container with elements larger than the value
+    - '<' Returns a container with elements less than the value
+    - '=' Returns a container with elements equal to the value
+
+*/
+integerArray integerArray::filter(char operation, int value) const
+{
+    integerArray retArr;
+    switch (operation)
+    {
+    case '<':
+        for (int i = 0; i < _size; i++)
+        {
+            if (_array[i] < value)
+            {
+                retArr.append(_array[i]);
+            }
+        }
+        return retArr;
+    case '>':
+        for (int i = 0; i < _size; i++)
+        {
+            if (_array[i] > value)
+            {
+                retArr.append(_array[i]);
+            }
+        }
+        return retArr;
+    case '=':
+        for (int i = 0; i < _size; i++)
+        {
+            if (_array[i] == value)
+            {
+                retArr.append(_array[i]);
+            }
+        }
+        return retArr;
+
+    default:
+        throw std::overflow_error("Incorrect operator!");
+    }
+}
+
+// MARK: - Private auxiliary method
+integerArray integerArray::sort(integerArray arr)
+{
+    if (arr._size == 0)
+    {
+        return arr;
+    }
+    int pivot = arr[arr._size / 2];
+    integerArray less = arr.filter('<', pivot);
+    integerArray equal = arr.filter('=', pivot);
+    integerArray great = arr.filter('>', pivot);
+    return sort(less) + equal + sort(great);
+}
+
+// Public sort method
+/*
+    Sorting Operators char -> '>'  and  '<'
+    Вefault operator '>'
+    incorrect operator enable sorting by default '>'
+*/
+void integerArray::sort(char operation)
+{
+    integerArray res = sort(*this);
+    int *newArray = new int[res._size];
+    if (operation == '>' || operation != '<')
+    {
+        for (int i = 0; i < res._size; i++)
+        {
+            newArray[i] = res._array[i];
+        }
+    }
+    else
+    {
+        int revers = res._size - 1;
+        for (int i = 0; i < res._size; i++)
+        {
+            newArray[revers - i] = res._array[i];
+        }
+    }
+
+    delete[] _array;
+    _array = newArray;
 }
