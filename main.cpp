@@ -12,15 +12,19 @@ int main(int argc, const char *argv[])
     // Объявление массивов
     integerArray arrayOne;
     integerArray arrayTwo(-5); // Объявление с ошибкой!
-    arrayOne.insertAt(0, 12931);
  
     // Добавление в массив значений с одновременным увеличением его размера.
     arrayOne.append(12);
     arrayOne.append(43);
 
-    arrayTwo.append(5);
-    arrayTwo.append(99);
+    arrayTwo.append(11);
+    arrayTwo.append(43);
 
+    if (arrayOne == arrayTwo) {
+        std::cout << "Массивы одинаковые!\n";
+    }else{
+        std::cout << "Массивы разные!\n";
+    }
     arrayOne.printArray();
     if (auto value = arrayOne[0])
     {

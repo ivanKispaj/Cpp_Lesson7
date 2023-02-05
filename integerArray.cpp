@@ -363,11 +363,19 @@ const int *integerArray::getFirstIndexWhere(int value)
 }
 
 // insert value at thebeginning
+/*
+    this method isert value to the beginning of the array
+*/
 void integerArray::inserFirst(int value)
 {
     insertAt(0, value);
 }
 
+/*
+    overloaded index taking operator.
+    Returns a pointer to the array value by index,
+    nullptr if array is empry or index out if range..
+*/
 const int *integerArray::operator[](const int index)
 {
     try
@@ -390,6 +398,7 @@ const int *integerArray::operator[](const int index)
     }
 }
 
+// array concatenation
 void integerArray::operator+(integerArray &array)
 {
     if (_isEmpty && array._isEmpty)
@@ -412,6 +421,7 @@ void integerArray::operator+(integerArray &array)
     _array = newArray;
 }
 
+
 integerArray &integerArray::operator=(const integerArray &array)
 {
     if (this == &array)
@@ -433,12 +443,22 @@ integerArray &integerArray::operator=(const integerArray &array)
     return *this;
 }
 
+// Comparing two arrays
 bool integerArray::operator==(const integerArray &array)
 {
-
-    if (_array == array._array && _isEmpty == array._isEmpty && _size == array._size)
+    if (_isEmpty == array._isEmpty) 
     {
-        return true;
+        if (_size == array._size)
+        {
+            for(int i = 0; i < _size; i++)
+            {
+                if (_array[i] != array._array[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
     return false;
 }
