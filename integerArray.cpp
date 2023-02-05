@@ -6,16 +6,30 @@
 
 #include "integerArray.h"
 
-// Init
+// Init with size
 
 integerArray::integerArray(int size) : _size(size)
 {
-    if (size <= 0)
+    try
     {
-        throw BadAnswer(INCORRECT_ARRAY_LEINGHT);
+        if (size <= 0)
+        {
+            throw BadAnswer(INCORRECT_ARRAY_LEINGHT);
+        }
+        else
+        {
+            _array = new int[_size];
+            _isEmpty = false;
+        }
     }
-    _array = new int[_size];
-    _isEmpty = false;
+    catch (const BadAnswer &error)
+    {
+        _array = nullptr;
+        _size = 0;
+        _isEmpty = true;
+        _returnValue = 0;
+        std::cerr << error.showError();
+    }
 }
 
 // copy constructor
@@ -85,150 +99,210 @@ void integerArray::append(int number)
 // Inserts an element into an array by index
 void integerArray::insertAt(int index, int value)
 {
-    if (_isEmpty)
+    try
     {
-        throw BadAnswer(ARRAY_IS_EMPTY);
-    }
-    if (index > _size)
-    {
-        throw BadAnswer(INDEX_OUT_OF_RANGE);
-    }
-
-    _size++;
-    int *newArray = new int[_size];
-
-    for (int i = 0; i < index; i++)
-    {
-        newArray[i] = _array[i];
-    }
-
-    newArray[index] = value;
-
-    if (index + 1 != _size)
-    {
-        for (int i = index; i < _size; i++)
+        if (_isEmpty)
         {
-            newArray[i + 1] = _array[i];
+            throw BadAnswer(ARRAY_IS_EMPTY);
         }
-    }
+        if (index < 0 || index > _size)
+        {
+            throw BadAnswer(INDEX_OUT_OF_RANGE);
+        }
 
-    erase();
-    _isEmpty = false;
-    _array = newArray;
-}
-
-// return first element from array
-int integerArray::first() const
-{
-    if (_size > 0)
-    {
-        return _array[0];
-    }
-    throw BadAnswer(ARRAY_IS_EMPTY);
-}
-
-// return last element from array
-int integerArray::last() const
-{
-    if (_size > 0)
-    {
-        return _array[_size - 1];
-    }
-    throw BadAnswer(ARRAY_IS_EMPTY);
-}
-
-// Removes the first element from the array and returns it
-int integerArray::removeFirst()
-{
-    if (_size <= 0)
-    {
-        erase();
-        throw BadAnswer(ARRAY_IS_EMPTY);
-    }
-    _size--;
-    int first = _array[0];
-    if (_size == 0)
-    {
-        erase();
-    }
-    else
-    {
+        _size++;
         int *newArray = new int[_size];
-        for (int i = 0; i < _size; i++)
+
+        for (int i = 0; i < index; i++)
         {
-            newArray[i] = _array[i + 1];
+            newArray[i] = _array[i];
         }
+
+        newArray[index] = value;
+
+        if (index + 1 != _size)
+        {
+            for (int i = index; i < _size; i++)
+            {
+                newArray[i + 1] = _array[i];
+            }
+        }
+
         erase();
         _isEmpty = false;
         _array = newArray;
     }
+    catch (const BadAnswer &error)
+    {
+        std::cerr << error.showError();
+    }
+}
 
-    return first;
+// return first element from array
+const int *integerArray::first() const
+{
+    try
+    {
+        if (_size > 0)
+        {
+            return &_array[0];
+        }
+        throw BadAnswer(ARRAY_IS_EMPTY);
+    }
+    catch (const BadAnswer &error)
+    {
+        std::cerr << error.showError();
+        return nullptr;
+    }
+}
+
+// return last element from array
+const int *integerArray::last() const
+{
+    try
+    {
+        if (_size > 0)
+        {
+            return &_array[_size - 1];
+        }
+        throw BadAnswer(ARRAY_IS_EMPTY);
+    }
+    catch (const BadAnswer &error)
+    {
+        std::cerr << error.showError();
+        return nullptr;
+    }
+}
+
+// Removes the first element from the array and returns it
+const int *integerArray::removeFirst()
+{
+
+    try
+    {
+        if (_size <= 0)
+        {
+            erase();
+            throw BadAnswer(ARRAY_IS_EMPTY);
+        }
+
+        _size--;
+        _returnValue = _array[0];
+
+        if (_size == 0)
+        {
+            erase();
+        }
+        else
+        {
+            int *newArray = new int[_size];
+            for (int i = 0; i < _size; i++)
+            {
+                newArray[i] = _array[i + 1];
+            }
+            erase();
+            _isEmpty = false;
+            _array = newArray;
+        }
+
+        return &_returnValue;
+    }
+    catch (const BadAnswer &error)
+    {
+        std::cerr << error.showError();
+        return nullptr;
+    }
 }
 
 //  Removes the last element from the array and returns it
-int integerArray::removeLast()
+const int *integerArray::removeLast()
 {
-    if (_size <= 0)
+    try
     {
-        erase();
-        throw BadAnswer(ARRAY_IS_EMPTY);
-    }
-    _size--;
-    int last = _array[_size];
-    if (_size == 0)
-    {
-        erase();
-    }
+        if (_size <= 0)
+        {
+            erase();
+            throw BadAnswer(ARRAY_IS_EMPTY);
+        }
+        _size--;
+        _returnValue = _array[_size];
+        if (_size == 0)
+        {
+            erase();
+        }
 
-    return last;
+        return &_returnValue;
+    }
+    catch (const BadAnswer &error)
+    {
+        std::cerr << error.showError();
+        return nullptr;
+    }
 }
 
 // remove value by index
-int integerArray::removeAt(const int index)
+const int *integerArray::removeAt(const int index)
 {
-    if (_isEmpty)
+    try
     {
-        throw BadAnswer(ARRAY_IS_EMPTY);
-    }
-    if (index > _size || index < 0)
-    {
-        throw BadAnswer(INDEX_OUT_OF_RANGE);
-    }
+        if (_isEmpty)
+        {
+            throw BadAnswer(ARRAY_IS_EMPTY);
+        }
+        if (index > _size || index < 0)
+        {
+            throw BadAnswer(INDEX_OUT_OF_RANGE);
+        }
 
-    int result = _array[index];
-    int *newArray = new int[_size - 1];
-    for (int i = 0; i < index; i++)
-    {
-        newArray[i] = _array[i];
-    }
-    for (int i = index + 1; i < _size; i++)
-    {
-        newArray[i - 1] = _array[i];
-    }
+        _returnValue = _array[index];
+        // int* result = new int(_array[index]);
+        int *newArray = new int[_size - 1];
+        for (int i = 0; i < index; i++)
+        {
+            newArray[i] = _array[i];
+        }
+        for (int i = index + 1; i < _size; i++)
+        {
+            newArray[i - 1] = _array[i];
+        }
 
-    erase();
-    _isEmpty = false;
-    _size--;
-    _array = newArray;
-    return result;
+        erase();
+        _isEmpty = false;
+        _size--;
+        _array = newArray;
+        return &_returnValue;
+    }
+    catch (const BadAnswer &error)
+    {
+        std::cerr << error.showError();
+        return nullptr;
+    }
 }
 
 // Array search by value
-int integerArray::getFirstIndexWhere(int value) const
+const int *integerArray::getFirstIndexWhere(int value)
 {
-    if (_size == 0)
+    try
     {
-        throw BadAnswer(ARRAY_IS_EMPTY);
-    }
-    for (int i = 0; i < _size; i++)
-    {
-        if (_array[i] == value)
+        if (_size == 0)
         {
-            return i;
+            throw BadAnswer(ARRAY_IS_EMPTY);
         }
+        for (int i = 0; i < _size; i++)
+        {
+            if (_array[i] == value)
+            {
+                _returnValue = i;
+                return &_returnValue;
+            }
+        }
+        throw BadAnswer(NO_FIND_VALUE);
     }
-    throw BadAnswer(NO_FIND_VALUE);
+    catch (const BadAnswer &error)
+    {
+        std::cerr << error.showError();
+        return nullptr;
+    }
 }
 
 // insert value at thebeginning
@@ -237,17 +311,26 @@ void integerArray::inserFirst(int value)
     insertAt(0, value);
 }
 
-int &integerArray::operator[](const int index)
+const int *integerArray::operator[](const int index)
 {
-    if (index >= 0 && index < _size)
+    try
     {
-        return _array[index];
+        if (index >= 0 && index < _size)
+        {
+            _returnValue = _array[index];
+            return &_returnValue;
+        }
+        if (_isEmpty)
+        {
+            throw BadAnswer(ARRAY_IS_EMPTY);
+        }
+        throw BadAnswer(INDEX_OUT_OF_RANGE);
     }
-    if (_isEmpty)
+    catch (const BadAnswer &error)
     {
-        throw BadAnswer(ARRAY_IS_EMPTY);
+        std::cerr << error.showError();
+        return nullptr;
     }
-    throw BadAnswer(INDEX_OUT_OF_RANGE);
 }
 
 void integerArray::operator+(integerArray &array)
@@ -295,6 +378,7 @@ integerArray &integerArray::operator=(const integerArray &array)
 
 bool integerArray::operator==(const integerArray &array)
 {
+
     if (_array == array._array && _isEmpty == array._isEmpty && _size == array._size)
     {
         return true;

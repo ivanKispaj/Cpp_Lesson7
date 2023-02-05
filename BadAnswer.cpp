@@ -22,6 +22,6 @@ const char *BadAnswer::showError() const
   case 3:
     return "Bad array leinght!\n";
   case 4:
-    return "Incorrect array leinght\n Array dont create!\n";
+    return "Incorrect array leinght, create empty array!\n";
   }
 }

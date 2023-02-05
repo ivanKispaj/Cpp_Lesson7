@@ -11,169 +11,42 @@ int main(int argc, const char *argv[])
 {
     // Объявление массивов
     integerArray arrayOne;
-    integerArray arrayTwo;
+    integerArray arrayTwo(-5); // Объявление с ошибкой!
 
-    // попытка создать массив с отрицательным индексом
-    try
-    {
-        arrayOne = integerArray(-5);
-    }
-    catch (const BadAnswer &error)
-    {
-        std::cout << error.showError();
-    }
+    // Добавление в массив значений с одновременным увеличением его размера.
+    arrayOne.append(12);
+    arrayOne.append(43);
 
-    // Создание массива размером в 3 эллемента
-    try
-    {
-        arrayOne = integerArray(3);
-    }
-    catch (const BadAnswer &error)
-    {
-        std::cout << error.showError();
-    }
-
-    // Добавление элементов в конец массива с увеличением его размера
-    arrayOne.append(155);
-    arrayOne.append(351);
-    arrayOne.append(51);
-    arrayOne.append(35);
-
-    arrayTwo = arrayOne; // скопирован контейнер
-
-    // вставка элемента в начало массива
-    arrayOne.inserFirst(3212);
-    // во второй массив добавили значение увеличив при этом его размер
     arrayTwo.append(5);
-    arrayTwo.append(999);
+    arrayTwo.append(99);
 
-    try
+    arrayOne.printArray();
+    if (auto value = arrayOne[0])
     {
-        // Доступ к значению по индексу
-        std::cout << "Элемент массива arrayTwo по индексу 0 : " << arrayTwo[0] << std::endl;
-
-        // Доступ к неинициализированному пустому массиву индекса не существует!
-        std::cout << "Доступ по несуществующему индексу ( пустой массив ): ";
-        std::cout << arrayOne[10] << std::endl;
+        std::cout << "array index: 0 -> value: " << *value << std::endl;
     }
-    catch (const BadAnswer &error)
+    if (auto value = arrayOne[5])
     {
-        std::cout << error.showError();
+        std::cout << "array index: 5 -> value: " << *value << std::endl;
     }
-
-    // добавление элементов в массив с изменением его длинны на количество добавленных элементов.
-    std::cout << "Конкатенация массивов: one +  \n";
-    arrayOne.printArray(); // печать всего измененного массива
-    std::cout << "Конкатенация массивов:  two \n";
-    arrayTwo.printArray(); // печать всего измененного массива
-    // конкатенация массивов;
-    arrayOne + arrayTwo;
-
-    try
+    arrayOne.inserFirst(999);
+    arrayOne.insertAt(10, 122);
+    arrayOne.insertAt(3, 545);
+    arrayOne[5];
+    arrayOne.printArray();
+    if (auto data = arrayOne.getFirstIndexWhere(43))
     {
-        std::cout << "Попытка вставки элемента в массив по индексу: ";
-        // вставляем значение в массив по несуществующему индексу
-        arrayOne.insertAt(3, 1001);
-        std::cout << "значение вставлено, index: 3: значение: " << arrayOne[3] << std::endl;
-
-        std::cout << "Попытка вставки элемента в массив по несуцществующему индексу: ";
-        // вставляем значение в массив по несуществующему индексу
-        arrayOne.insertAt(100, 1001);
-    }
-    catch (const BadAnswer &error)
-    {
-        std::cout << error.showError();
+        std::cout << "Число 43 найдено в массиве, инедкс: " << *data << std::endl;
     }
 
-    arrayOne.printArray(); // печать всего измененного массива
-
-    try
+    if (auto data = arrayOne.getFirstIndexWhere(45))
     {
-        std::cout << "Попытка удалить первый элемент массива, размер массива:  " << arrayOne.count() << std::endl;
-        int value = arrayOne.removeFirst();
-        std::cout << "Удалено значение: " << value << " index: 0: размер массива: " << arrayOne.count() << std::endl;
+        std::cout << "Число 43 найдено в массиве, инедкс: " << *data << std::endl;
     }
-    catch (const BadAnswer &error)
+    else
     {
-        std::cout << error.showError();
+        std::cout << "Число 45 не найдено в массиве\n";
     }
-
-    try
-    {
-        std::cout << "Попытка удалить последний элемент массива, размер массива:  " << arrayOne.count() << std::endl;
-        int value = arrayOne.removeLast();
-        std::cout << "Элемент удален: " << value << " , размер массива: " << arrayOne.count() << std::endl;
-    }
-    catch (const BadAnswer &error)
-    {
-        std::cout << error.showError();
-    }
-
-    try
-    {
-        std::cout << "Поиск в массиве значения 1001 : ";
-        int index = arrayOne.getFirstIndexWhere(1001);
-        std::cout << "первый найденый индекс с таким содержимым: " << index << std::endl;
-
-        std::cout << "Поиск в массиве значения 2001 : ";
-        index = arrayOne.getFirstIndexWhere(2001);
-        std::cout << "первый найденый индекс с таким содержимым: " << index << std::endl;
-    }
-    catch (const BadAnswer &error)
-    {
-        std::cout << error.showError();
-    }
-
-    arrayOne.printArray(); // печать всего измененного массива
-
-    try
-    {
-        std::cout << "Удаление значения по индексу 2: ";
-        int value = arrayOne.removeAt(2);
-        std::cout << "удален элемент :" << value << std::endl;
-
-        std::cout << "Удаление значения по несуществующему индексу : ";
-        value = arrayOne.removeAt(20);
-        std::cout << "удален элемент :" << value << std::endl;
-    }
-    catch (const BadAnswer &error)
-    {
-        std::cout << error.showError();
-    }
-
-    arrayOne.printArray(); // печать массива для наголядности
-
-    try
-    {
-        std::cout << "Тест выхода за пределы при удалении \n";
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-        std::cout << "Удален: " << (arrayOne.removeLast()) << std::endl;
-    }
-    catch (const BadAnswer &error)
-    {
-        std::cout << error.showError();
-    }
-
     std::cout << "array cout: " << arrayOne.count() << std::endl;
     return 0;
 }
