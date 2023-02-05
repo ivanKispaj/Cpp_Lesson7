@@ -12,7 +12,8 @@ int main(int argc, const char *argv[])
     // Объявление массивов
     integerArray arrayOne;
     integerArray arrayTwo(-5); // Объявление с ошибкой!
-
+    arrayOne.insertAt(0, 12931);
+ 
     // Добавление в массив значений с одновременным увеличением его размера.
     arrayOne.append(12);
     arrayOne.append(43);

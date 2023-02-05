@@ -7,7 +7,13 @@
 #include "integerArray.h"
 
 // Init with size
-
+/*
+    Negative value size, will throw an exception and create an empty array
+    Using:
+    integerArray array; - this create epmty array!
+    integerArray array(0) / integerArray array(-1) - this create epmty array! and will throw an exception message!
+    integerArray array(5) - create array leinght 5 and default value - 0
+*/
 integerArray::integerArray(int size) : _size(size)
 {
     try
@@ -52,6 +58,9 @@ integerArray::~integerArray()
 }
 
 // erase array ( private method )
+/*
+    This method resets the array
+*/
 void integerArray::erase()
 {
     delete[] _array;
@@ -65,13 +74,19 @@ int integerArray::count() const
     return _size;
 }
 
-// is empty array
+/*
+    This method returns true if the array is empty, and false if the values exist
+*/
 bool integerArray::isEmpty() const
 {
     return _isEmpty;
 }
 
 // append an element to end of the array
+/*
+    This method adds a value to the end of the array,
+     and increases the size of the array
+*/
 void integerArray::append(int number)
 {
     _size++;
@@ -97,18 +112,25 @@ void integerArray::append(int number)
 }
 
 // Inserts an element into an array by index
+/*
+    This method adds a value to the passed index and expands the array!
+    You need to make sure that the index exists,
+    otherwise the value will not be added and an exception will occur
+    - Error message: "Array is empty!" if array is empty.
+    - Error message: "Index out of range!" if array dont contain an index
+*/
 void integerArray::insertAt(int index, int value)
 {
     try
     {
-        if (_isEmpty)
+         if (index < 0 || index > _size)
+        {
+            throw BadAnswer(INDEX_OUT_OF_RANGE);
+        } else if (_isEmpty && index != 0)
         {
             throw BadAnswer(ARRAY_IS_EMPTY);
         }
-        if (index < 0 || index > _size)
-        {
-            throw BadAnswer(INDEX_OUT_OF_RANGE);
-        }
+       
 
         _size++;
         int *newArray = new int[_size];
@@ -139,6 +161,10 @@ void integerArray::insertAt(int index, int value)
 }
 
 // return first element from array
+/*
+    This method returns a pointer to the first element of the array.
+    - Error message: "Array is empty!" if array is empty.
+*/
 const int *integerArray::first() const
 {
     try
@@ -157,6 +183,10 @@ const int *integerArray::first() const
 }
 
 // return last element from array
+/*
+    This method returns a pointer to the last value of the array.
+    - Error message: "Array is empty!" if array is empty.
+*/
 const int *integerArray::last() const
 {
     try
@@ -175,6 +205,11 @@ const int *integerArray::last() const
 }
 
 // Removes the first element from the array and returns it
+/*
+    This method deletes the first value of the array,
+    reduces the size of the array, and returns a pointer to the deleted value.
+    - Error message: "Array is empty!" if array is empty.
+*/
 const int *integerArray::removeFirst()
 {
 
@@ -215,6 +250,11 @@ const int *integerArray::removeFirst()
 }
 
 //  Removes the last element from the array and returns it
+/*
+    This method deletes the last value of the array,
+    reduces the size of the array, and returns a pointer to the deleted value.
+    - Error message: "Array is empty!" if array is empty.
+*/
 const int *integerArray::removeLast()
 {
     try
@@ -241,6 +281,16 @@ const int *integerArray::removeLast()
 }
 
 // remove value by index
+/*
+    This method deletes the value of the array by index,
+    reduces the size of the array, and returns a pointer to the deleted value.
+
+    It is necessary to make sure that the index exists,
+    If the index is missing or the array is empty, an exception is thrown.
+
+    - Error message: "Array is empty!" if array is empty.
+    - Error message: "Index out of range!" if array dont contain an index
+*/
 const int *integerArray::removeAt(const int index)
 {
     try
@@ -280,6 +330,13 @@ const int *integerArray::removeAt(const int index)
 }
 
 // Array search by value
+/*
+    This method searches the array for the passed value,
+    and returns a pointer to the index.
+    Otherwise it will return nullptr.
+    - Returns a pointer to the first index of the value or nullptr if the value is not found.
+    - throw Error if array is empty and return nullptr
+*/
 const int *integerArray::getFirstIndexWhere(int value)
 {
     try
@@ -296,7 +353,7 @@ const int *integerArray::getFirstIndexWhere(int value)
                 return &_returnValue;
             }
         }
-        throw BadAnswer(NO_FIND_VALUE);
+        return nullptr;
     }
     catch (const BadAnswer &error)
     {
